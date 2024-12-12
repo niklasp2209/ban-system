@@ -73,7 +73,7 @@ public class DefaultBanManager implements BanManager {
     @Override
     public @NotNull CompletableFuture<Optional<BanListEntry>> getBan(@NotNull UUID player, @NotNull BanType type) {
         return mySQL.query(GET_BAN_QUERY, player.toString(), type.toString()).thenApply(result -> {
-            List<DBRow> rows = result.getRows();
+            List<DBRow> rows = result.rows();
             if (rows.isEmpty()) {
                 System.out.println("No active ban found for player '" + player + "' with type '" + type + "'");
                 return Optional.empty();
@@ -95,7 +95,7 @@ public class DefaultBanManager implements BanManager {
             Optional<Integer> page, Optional<Integer> pageSize
     ) {
         return mySQL.query(GET_BANS_QUERY, player.toString(), type.toString()).thenApply(result -> {
-            List<DBRow> rows = result.getRows();
+            List<DBRow> rows = result.rows();
             if (rows.isEmpty()) {
                 System.out.println("No active ban found for player '" + player + "' with type '" + type + "'");
                 return new BanList(player, new ArrayList<>());
