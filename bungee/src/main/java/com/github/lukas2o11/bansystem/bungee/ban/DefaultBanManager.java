@@ -6,6 +6,7 @@ import com.github.lukas2o11.bansystem.bungee.database.MySQL;
 import com.github.lukas2o11.bansystem.bungee.ban.models.BanList;
 import com.github.lukas2o11.bansystem.bungee.ban.models.BanListEntry;
 import com.github.lukas2o11.bansystem.bungee.database.result.DBRow;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class DefaultBanManager implements BanManager {
 
     private final MySQL mySQL;
 
-    public DefaultBanManager(BanSystemPlugin plugin) {
+    public DefaultBanManager(@NotNull BanSystemPlugin plugin) {
         this.mySQL = plugin.getMySQL();
         createTables();
     }
@@ -54,23 +55,23 @@ public class DefaultBanManager implements BanManager {
     }
 
     @Override
-    public CompletableFuture<Void> banUser(UUID player, BanType type) {
+    public @NotNull CompletableFuture<Void> banUser(@NotNull UUID player, @NotNull BanType type) {
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public CompletableFuture<Void> unbanUser(UUID player, BanType type) {
+    public @NotNull CompletableFuture<Void> unbanUser(@NotNull UUID player, @NotNull BanType type) {
         // TODO: ban.active = false on unban
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public CompletableFuture<Boolean> isUserBanned(UUID player, BanType type) {
+    public @NotNull CompletableFuture<Boolean> isUserBanned(@NotNull UUID player, @NotNull BanType type) {
         return CompletableFuture.completedFuture(true);
     }
 
     @Override
-    public CompletableFuture<Optional<BanListEntry>> getBan(UUID player, BanType type) {
+    public @NotNull CompletableFuture<Optional<BanListEntry>> getBan(@NotNull UUID player, @NotNull BanType type) {
         return mySQL.query(GET_BAN_QUERY, player.toString(), type.toString()).thenApply(result -> {
             List<DBRow> rows = result.getRows();
             if (rows.isEmpty()) {
@@ -89,8 +90,8 @@ public class DefaultBanManager implements BanManager {
     }
 
     @Override
-    public CompletableFuture<BanList> getBans(
-            UUID player, BanType type,
+    public @NotNull CompletableFuture<BanList> getBans(
+            @NotNull UUID player, @NotNull BanType type,
             Optional<Integer> page, Optional<Integer> pageSize
     ) {
         return mySQL.query(GET_BANS_QUERY, player.toString(), type.toString()).thenApply(result -> {
@@ -106,7 +107,7 @@ public class DefaultBanManager implements BanManager {
         });
     }
 
-    private BanListEntry listEntryFromRow(DBRow row) {
+    private @NotNull BanListEntry listEntryFromRow(@NotNull DBRow row) {
         return new BanListEntry(
                 UUID.fromString(row.getValue("player", String.class)),
                 row.getValue("bannedBy", String.class),

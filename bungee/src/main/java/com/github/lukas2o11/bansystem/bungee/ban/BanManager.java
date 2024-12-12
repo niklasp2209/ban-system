@@ -3,6 +3,7 @@ package com.github.lukas2o11.bansystem.bungee.ban;
 import com.github.lukas2o11.bansystem.api.BanType;
 import com.github.lukas2o11.bansystem.bungee.ban.models.BanList;
 import com.github.lukas2o11.bansystem.bungee.ban.models.BanListEntry;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -10,16 +11,16 @@ import java.util.concurrent.CompletableFuture;
 
 public interface BanManager {
 
-    CompletableFuture<Void> banUser(UUID player, BanType type);
+    @NotNull CompletableFuture<Void> banUser(@NotNull UUID player, @NotNull BanType type);
 
-    CompletableFuture<Void> unbanUser(UUID player, BanType type);
+    @NotNull CompletableFuture<Void> unbanUser(@NotNull UUID player, @NotNull BanType type);
 
-    CompletableFuture<Boolean> isUserBanned(UUID player, BanType type);
+    @NotNull CompletableFuture<Boolean> isUserBanned(@NotNull UUID player, @NotNull BanType type);
 
-    CompletableFuture<Optional<BanListEntry>> getBan(UUID player, BanType type);
+    @NotNull CompletableFuture<Optional<BanListEntry>> getBan(@NotNull UUID player, @NotNull BanType type);
 
-    CompletableFuture<BanList> getBans(
-            UUID player, BanType type,
+    @NotNull CompletableFuture<BanList> getBans(
+            @NotNull UUID player, @NotNull BanType type,
             Optional<Integer> page, Optional<Integer> pageSize
     );
 }
