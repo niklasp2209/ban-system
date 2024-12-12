@@ -2,8 +2,8 @@ package com.github.lukas2o11.bansystem.bungee;
 
 import com.github.lukas2o11.bansystem.api.BanType;
 import com.github.lukas2o11.bansystem.bungee.database.MySQL;
-import com.github.lukas2o11.bansystem.bungee.database.ban.BanManager;
-import com.github.lukas2o11.bansystem.bungee.database.ban.DefaultBanManager;
+import com.github.lukas2o11.bansystem.bungee.ban.BanManager;
+import com.github.lukas2o11.bansystem.bungee.ban.DefaultBanManager;
 import com.github.lukas2o11.bansystem.bungee.template.BanTemplateManager;
 import com.github.lukas2o11.bansystem.bungee.template.DefaultBanTemplateManager;
 import lombok.Getter;

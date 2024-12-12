@@ -1,10 +1,10 @@
-package com.github.lukas2o11.bansystem.bungee.database.ban;
+package com.github.lukas2o11.bansystem.bungee.ban;
 
 import com.github.lukas2o11.bansystem.api.BanType;
 import com.github.lukas2o11.bansystem.bungee.BanSystemPlugin;
 import com.github.lukas2o11.bansystem.bungee.database.MySQL;
-import com.github.lukas2o11.bansystem.bungee.database.ban.models.BanList;
-import com.github.lukas2o11.bansystem.bungee.database.ban.models.BanListEntry;
+import com.github.lukas2o11.bansystem.bungee.ban.models.BanList;
+import com.github.lukas2o11.bansystem.bungee.ban.models.BanListEntry;
 import com.github.lukas2o11.bansystem.bungee.database.result.DBRow;
 
 import java.util.ArrayList;
