@@ -8,12 +8,9 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
-@RequiredArgsConstructor
-public class DBRow {
+public record DBRow(@NotNull Map<String, Object> columns) {
 
-    private final Map<String, Object> columns;
-
-    public @NotNull Set<String> getColumns() {
+    public @NotNull Set<String> getColumnNames() {
         return columns.keySet();
     }
 
