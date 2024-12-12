@@ -38,7 +38,7 @@ public class MySQL {
         });
     }
 
-    public CompletableFuture<Void> update(@NotNull String sql, @NotNull Object... params) {
+    public @NotNull CompletableFuture<Void> update(@NotNull String sql, @NotNull Object... params) {
         return dataSource.map(ds -> CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection()) {
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -50,7 +50,7 @@ public class MySQL {
         })).orElseThrow(() -> new RuntimeException("Error creating query: no MySQL connection established"));
     }
 
-    public CompletableFuture<DBResult> query(@NotNull String sql, @NotNull Object... params) {
+    public @NotNull CompletableFuture<DBResult> query(@NotNull String sql, @NotNull Object... params) {
         return dataSource.map(ds -> CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection()) {
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -88,7 +88,7 @@ public class MySQL {
         }).orElseThrow(() -> new RuntimeException("DataSource was not initialized yet"));
     }
 
-    private void bindParams(PreparedStatement statement, Object... params) throws SQLException {
+    private void bindParams(@NotNull PreparedStatement statement, @NotNull Object... params) throws SQLException {
         for (int index = 0; index < params.length; index++) {
             int paramIndex = index + 1;
             statement.setObject(paramIndex, params[index]);
