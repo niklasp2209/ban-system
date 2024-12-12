@@ -1,0 +1,6 @@
+name: BanSystem
+version: 1.0
+authors:
+  - lukas2o11
+  - BukkitNews
+main: com.github.lukas2o11.bansystem.bungee.BanSystemPlugin
