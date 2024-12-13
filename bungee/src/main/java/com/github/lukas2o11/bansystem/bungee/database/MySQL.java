@@ -9,6 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class MySQL {
 
@@ -46,6 +49,43 @@ public class MySQL {
                 statement.executeUpdate();
             } catch (SQLException e) {
                 System.err.println("Error executing update: " + e.getMessage());
+            }
+        })).orElseThrow(() -> new RuntimeException("Error creating query: no MySQL connection established"));
+    }
+
+    public @NotNull CompletableFuture<Void> update(@NotNull Connection connection, @NotNull String sql, @NotNull Object... params) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                bindParams(statement, params);
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println("Error executing update: " + e.getMessage());
+            }
+        });
+    }
+
+    public @NotNull CompletableFuture<Void> executeTransaction(@NotNull Consumer<Connection> consumer) {
+        return dataSource.map(ds -> CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection()) {
+                connection.setAutoCommit(false);
+
+                try {
+                    consumer.accept(connection);
+                    connection.commit();
+                    System.out.println("Transaction committed successfully");
+                } catch (Exception e) {
+                    try {
+                        connection.rollback();
+                        System.err.println("Transaction rolled back due to error: " + e.getMessage());
+                    } catch (SQLException e1) {
+                        System.err.println("Error during rollback: " + e1.getMessage());
+                    }
+                } finally {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                System.err.println("Error getting connection for transaction: " + e.getMessage());
             }
         })).orElseThrow(() -> new RuntimeException("Error creating query: no MySQL connection established"));
     }
