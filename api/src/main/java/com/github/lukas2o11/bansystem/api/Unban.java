@@ -16,10 +16,10 @@ public class Unban {
     private final UUID player;
 
     @NotNull
-    private final String unbannedBy; // UUID or CONSOLE
+    private final Integer banId;
 
     @NotNull
-    private final Integer banId;
+    private final String unbannedBy; // UUID or CONSOLE
 
     private final long unbannedAt;
 }
