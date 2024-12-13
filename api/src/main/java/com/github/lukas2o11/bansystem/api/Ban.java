@@ -15,6 +15,9 @@ import java.util.UUID;
 public class Ban {
 
     @NotNull
+    private final Integer id;
+
+    @NotNull
     private final UUID player;
 
     @NotNull
