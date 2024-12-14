@@ -15,11 +15,11 @@ import java.util.function.Function;
 
 public class DefaultBanManager implements BanManager {
 
-    private static final String UNBAN_QUERY = "UPDATE bansystem_bans " +
+    private static final String UNBAN_UPDATE_QUERY = "UPDATE bansystem_bans " +
             "SET active = false " +
             "WHERE id = ?;";
 
-    private static final String UNBAN_QUERY1 = "INSERT INTO bansystem_unbans" +
+    private static final String UNBAN_INSERT_QUERY = "INSERT INTO bansystem_unbans" +
             "(player, banId, unbannedBy, unbannedAt) " +
             "VALUES" +
             "(?, ?, ?, ?);";
@@ -87,7 +87,6 @@ public class DefaultBanManager implements BanManager {
                 "unbannedBy VARCHAR(36) NOT NULL, " +
                 "unbannedAt BIGINT NOT NULL, " +
                 "PRIMARY KEY(id), " +
-                "FOREIGN KEY(player) REFERENCES bansystem_bans(player), " +
                 "FOREIGN KEY(banId) REFERENCES bansystem_bans(id)" +
                 ");").join();
     }
@@ -100,8 +99,8 @@ public class DefaultBanManager implements BanManager {
     @Override
     public @NotNull CompletableFuture<Void> unbanUser(@NotNull UUID player, int banId, @NotNull String unbannedBy) {
         return mySQL.executeTransaction(connection -> {
-            mySQL.update(connection, UNBAN_QUERY, banId).thenCompose(o -> mySQL.update(
-                    connection, UNBAN_QUERY1,
+            return mySQL.update(connection, UNBAN_UPDATE_QUERY, banId).thenCompose(o -> mySQL.update(
+                    connection, UNBAN_INSERT_QUERY,
                     player.toString(), banId, unbannedBy, System.currentTimeMillis()
             ));
         });

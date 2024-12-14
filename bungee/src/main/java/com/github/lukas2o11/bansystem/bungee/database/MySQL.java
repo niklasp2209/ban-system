@@ -9,9 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class MySQL {
 
@@ -60,18 +58,18 @@ public class MySQL {
                 bindParams(statement, params);
                 statement.executeUpdate();
             } catch (SQLException e) {
-                System.err.println("Error executing update: " + e.getMessage());
+                throw new RuntimeException(e);
             }
         });
     }
 
-    public @NotNull CompletableFuture<Void> executeTransaction(@NotNull Consumer<Connection> consumer) {
+    public @NotNull CompletableFuture<Void> executeTransaction(@NotNull Function<Connection, CompletableFuture<Void>> consumer) {
         return dataSource.map(ds -> CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection()) {
                 connection.setAutoCommit(false);
 
                 try {
-                    consumer.accept(connection);
+                    consumer.apply(connection).join();
                     connection.commit();
                     System.out.println("Transaction committed successfully");
                 } catch (Exception e) {

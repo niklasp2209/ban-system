@@ -1,6 +1,5 @@
 package com.github.lukas2o11.bansystem.bungee;
 
-import com.github.lukas2o11.bansystem.api.BanType;
 import com.github.lukas2o11.bansystem.bungee.database.MySQL;
 import com.github.lukas2o11.bansystem.bungee.ban.BanManager;
 import com.github.lukas2o11.bansystem.bungee.ban.DefaultBanManager;
@@ -25,12 +24,6 @@ public class BanSystemPlugin extends Plugin {
 
         this.templateManager = new DefaultBanTemplateManager(this);
         this.banManager = new DefaultBanManager(this);
-
-        banManager.getBan(UUID.fromString("3486676c-1055-4953-aa83-d274ff95c5cc"), BanType.BAN).thenAccept(o -> {
-            if (o.isPresent()) {
-                System.out.println(o.get().toString());
-            }
-        });
     }
 
     @Override
