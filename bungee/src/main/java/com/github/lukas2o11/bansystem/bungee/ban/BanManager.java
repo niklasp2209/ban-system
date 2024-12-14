@@ -25,8 +25,5 @@ public interface BanManager {
 
     @NotNull CompletableFuture<Optional<BanListEntry>> getBanAsListEntry(@NotNull UUID player, @NotNull BanType type);
 
-    @NotNull CompletableFuture<BanList> getBanList(
-            @NotNull UUID player, @NotNull BanType type,
-            Optional<Integer> page, Optional<Integer> pageSize
-    );
+    @NotNull CompletableFuture<BanList> getBanList(@NotNull UUID player, @NotNull BanType type);
 }

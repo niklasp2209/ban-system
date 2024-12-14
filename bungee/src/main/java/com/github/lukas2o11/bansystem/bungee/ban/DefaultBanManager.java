@@ -132,10 +132,7 @@ public class DefaultBanManager implements BanManager {
     }
 
     @Override
-    public @NotNull CompletableFuture<BanList> getBanList(
-            @NotNull UUID player, @NotNull BanType type,
-            Optional<Integer> page, Optional<Integer> pageSize
-    ) {
+    public @NotNull CompletableFuture<BanList> getBanList(@NotNull UUID player, @NotNull BanType type) {
         return getBansFromQuery(
                 player,
                 type,
