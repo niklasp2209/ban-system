@@ -1,6 +1,5 @@
 package com.github.lukas2o11.bansystem.bungee.ban.models;
 
-import com.github.lukas2o11.bansystem.api.BanType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;

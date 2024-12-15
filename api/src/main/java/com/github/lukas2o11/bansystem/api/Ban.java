@@ -1,13 +1,11 @@
 package com.github.lukas2o11.bansystem.api;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+@AllArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
