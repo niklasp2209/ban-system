@@ -3,6 +3,7 @@ package com.lukas2o11.bansystem.web.data.messaging.publisher;
 import com.lukas2o11.bansystem.web.data.exception.BanSystemUnavailableException;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -39,12 +40,12 @@ public class UnbanMessagePublisher implements RabbitMQMessagePublisher {
             Optional.ofNullable(template.convertSendAndReceive(exchangeName, unbanPlayerRoutingKey, buildMessage(message, properties)))
                     .orElseThrow(BanSystemUnavailableException::new);
             log.info("RabbitMQ message sent: {}", message);
-        } catch (Exception e) {
+        } catch (AmqpException e) {
             log.error("Could not send RabbitMQ message", e);
         }
     }
 
-    private @NotNull Message buildMessage(@NotNull String message, MessageProperties properties) {
+    private @NotNull Message buildMessage(@NotNull String message, @NotNull MessageProperties properties) {
         return new Message(message.getBytes(StandardCharsets.UTF_8), properties);
     }
 }
