@@ -48,7 +48,8 @@ public class BanController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Ban>> listBans(@RequestParam("page") Optional<Integer> page, @RequestParam("pageSize") Optional<Integer> pageSize) {
-        return ResponseEntity.ok(service.listBans(page, pageSize));
+    public ResponseEntity<Page<Ban>> listBans(@RequestParam("type") Optional<String> type, @RequestParam("page") Optional<Integer> page,
+                                              @RequestParam("pageSize") Optional<Integer> pageSize) {
+        return ResponseEntity.ok(service.listBans(type, page, pageSize));
     }
 }

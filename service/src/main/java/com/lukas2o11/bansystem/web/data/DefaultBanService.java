@@ -9,7 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import java.util.Optional;
@@ -28,6 +30,7 @@ public class DefaultBanService implements BanService {
     }
 
     @Override
+    @Transactional
     public void unbanUser(@NotNull Integer id) {
         publisher.sendMessage(String.valueOf(id));
     }
@@ -45,7 +48,11 @@ public class DefaultBanService implements BanService {
     }
 
     @Override
-    public @NotNull Page<Ban> listBans(Optional<Integer> page, Optional<Integer> pageSize) {
-        return repository.findAll(PageRequest.of(page.orElse(0), pageSize.orElse(25)));
+    public @NotNull Page<Ban> listBans(Optional<String> type, Optional<Integer> page, Optional<Integer> pageSize) {
+        return repository.findAll(type, createPageable(page, pageSize));
+    }
+
+    private @NotNull Pageable createPageable(Optional<Integer> page, Optional<Integer> pageSize) {
+        return PageRequest.of(page.orElse(0), pageSize.orElse(25));
     }
 }

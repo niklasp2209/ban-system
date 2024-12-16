@@ -15,5 +15,5 @@ public interface BanService {
 
     @NotNull BanListEntry getBanAsListEntryById(@NotNull Integer id);
 
-    @NotNull Page<Ban> listBans(Optional<Integer> page, Optional<Integer> pageSize);
+    @NotNull Page<Ban> listBans(Optional<String> type, Optional<Integer> page, Optional<Integer> pageSize);
 }

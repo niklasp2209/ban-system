@@ -20,19 +20,21 @@ public class DefaultBanRepository implements BanRepository {
 
     private static final String FIND_BY_ID_QUERY = "SELECT * " +
             "FROM bansystem_bans " +
-            "WHERE id = ?";
+            "WHERE id = ?;";
 
     private static final String FIND_BY_ID_AS_ENTRY_QUERY = "SELECT bb.*, bt.id, bt.reason, bt.type " +
             "FROM bansystem_bans bb " +
             "INNER JOIN bansystem_templates bt ON bt.id = bb.templateId " +
             "WHERE bb.id = ?;";
 
-    private static final String FIND_ALL_QUERY = "SELECT * " +
-            "FROM bansystem_bans " +
-            "LIMIT ? OFFSET ?";
+    private static final String FIND_ALL_QUERY = "SELECT *, bt.type " +
+            "FROM bansystem_bans bb " +
+            "INNER JOIN bansystem_templates bt ON bt.id = bb.templateId " +
+            "WHERE bt.type = ? " +
+            "LIMIT ? OFFSET ?;";
 
     private static final String COUNT_QUERY = "SELECT COUNT(*) " +
-            "FROM bansystem_bans";
+            "FROM bansystem_bans;";
 
     private @NotNull final JdbcTemplate jdbcTemplate;
 
@@ -58,11 +60,11 @@ public class DefaultBanRepository implements BanRepository {
     }
 
     @Override
-    public @NotNull Page<Ban> findAll(@NotNull Pageable pageable) {
+    public @NotNull Page<Ban> findAll(Optional<String> type, @NotNull Pageable pageable) {
         int limit = pageable.getPageSize();
         int offset = pageable.getPageNumber() * limit;
 
-        List<Ban> bans = jdbcTemplate.query(FIND_ALL_QUERY, banFromRow(), limit, offset);
+        List<Ban> bans = jdbcTemplate.query(FIND_ALL_QUERY, banFromRow(), type.orElse("BAN"), limit, offset);
         int total = Optional.ofNullable(jdbcTemplate.queryForObject(COUNT_QUERY, Integer.class))
                 .orElseThrow(() -> new RuntimeException("Could not fetch total count"));
         return new PageImpl<>(bans, pageable, total);

@@ -14,5 +14,5 @@ public interface BanRepository {
 
     Optional<BanListEntry> findByIdAsListEntry(@NotNull Integer id);
 
-    @NotNull Page<Ban> findAll(@NotNull Pageable pageable);
+    @NotNull Page<Ban> findAll(Optional<String> type, @NotNull Pageable pageable);
 }
