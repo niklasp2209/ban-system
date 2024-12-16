@@ -18,17 +18,17 @@ import java.util.Optional;
 @ApplicationScope
 public class DefaultBanService implements BanService {
 
-    private final BanRepository repository;
-    private final UnbanMessagePublisher publisher;
+    private @NotNull final BanRepository repository;
+    private @NotNull final UnbanMessagePublisher publisher;
 
     @Autowired
-    public DefaultBanService(BanRepository repository, UnbanMessagePublisher publisher) {
+    public DefaultBanService(@NotNull BanRepository repository, @NotNull UnbanMessagePublisher publisher) {
         this.repository = repository;
         this.publisher = publisher;
     }
 
     @Override
-    public void unban(@NotNull Integer id) {
+    public void unbanUser(@NotNull Integer id) {
         publisher.sendMessage(String.valueOf(id));
     }
 

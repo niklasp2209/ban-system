@@ -1,6 +1,7 @@
 package com.lukas2o11.bansystem.web.data.exception;
 
 import lombok.*;
+import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 @Getter
@@ -10,6 +11,6 @@ import lombok.*;
 public class ExceptionResponse {
 
     private final int statusCode;
-    private final String message;
+    private @NotNull final String message;
     private final long timestamp = System.currentTimeMillis();
 }

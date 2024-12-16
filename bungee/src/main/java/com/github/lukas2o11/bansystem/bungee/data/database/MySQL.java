@@ -1,7 +1,7 @@
-package com.github.lukas2o11.bansystem.bungee.database;
+package com.github.lukas2o11.bansystem.bungee.data.database;
 
-import com.github.lukas2o11.bansystem.bungee.database.result.DBResult;
-import com.github.lukas2o11.bansystem.bungee.database.result.DBRow;
+import com.github.lukas2o11.bansystem.bungee.data.database.result.DBResult;
+import com.github.lukas2o11.bansystem.bungee.data.database.result.DBRow;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +13,7 @@ import java.util.function.Function;
 
 public class MySQL {
 
-    @NotNull
-    private final HikariConfig config;
+    private @NotNull final HikariConfig config;
 
     private Optional<HikariDataSource> dataSource = Optional.empty();
 

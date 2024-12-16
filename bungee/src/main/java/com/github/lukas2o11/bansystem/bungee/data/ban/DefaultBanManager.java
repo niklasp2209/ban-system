@@ -1,12 +1,12 @@
-package com.github.lukas2o11.bansystem.bungee.ban;
+package com.github.lukas2o11.bansystem.bungee.data.ban;
 
 import com.github.lukas2o11.bansystem.api.Ban;
 import com.github.lukas2o11.bansystem.api.BanType;
 import com.github.lukas2o11.bansystem.bungee.BanSystemPlugin;
-import com.github.lukas2o11.bansystem.bungee.database.MySQL;
-import com.github.lukas2o11.bansystem.bungee.ban.models.BanList;
-import com.github.lukas2o11.bansystem.bungee.ban.models.BanListEntry;
-import com.github.lukas2o11.bansystem.bungee.database.result.DBRow;
+import com.github.lukas2o11.bansystem.bungee.data.database.MySQL;
+import com.github.lukas2o11.bansystem.bungee.data.ban.models.BanList;
+import com.github.lukas2o11.bansystem.bungee.data.ban.models.BanListEntry;
+import com.github.lukas2o11.bansystem.bungee.data.database.result.DBRow;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -62,7 +62,7 @@ public class DefaultBanManager implements BanManager {
             "WHERE bb.player = ? " +
             "AND bt.type = ?;";
 
-    private final MySQL mySQL;
+    private @NotNull final MySQL mySQL;
 
     public DefaultBanManager(@NotNull BanSystemPlugin plugin) {
         this.mySQL = plugin.getMySQL();

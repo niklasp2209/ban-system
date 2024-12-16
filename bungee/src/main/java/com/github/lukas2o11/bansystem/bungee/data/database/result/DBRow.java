@@ -1,6 +1,5 @@
-package com.github.lukas2o11.bansystem.bungee.database.result;
+package com.github.lukas2o11.bansystem.bungee.data.database.result;
 
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

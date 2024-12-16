@@ -20,10 +20,10 @@ import java.util.Optional;
 )
 public class BanController {
 
-    private final BanService service;
+    private @NotNull final BanService service;
 
     @Autowired
-    public BanController(BanService service) {
+    public BanController(@NotNull BanService service) {
         this.service = service;
     }
 
@@ -32,7 +32,7 @@ public class BanController {
             consumes = "application/json"
     )
     public ResponseEntity<Void> unbanUser(@RequestBody @NotNull @Valid UnbanRequest request) {
-        service.unban(request.getId());
+        service.unbanUser(request.getId());
         return ResponseEntity.noContent()
                 .build();
     }

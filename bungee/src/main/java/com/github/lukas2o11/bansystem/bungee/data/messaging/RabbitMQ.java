@@ -1,11 +1,9 @@
-package com.github.lukas2o11.bansystem.bungee.messaging;
+package com.github.lukas2o11.bansystem.bungee.data.messaging;
 
 import com.github.lukas2o11.bansystem.bungee.BanSystemPlugin;
 import com.rabbitmq.client.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.nio.charset.StandardCharsets;
 
 public class RabbitMQ {
 
@@ -13,14 +11,11 @@ public class RabbitMQ {
     private static final String QUEUE_NAME = "unbans";
     private static final String ROUTING_KEY = "unban.player";
 
-    @NotNull
-    private final BanSystemPlugin plugin;
+    private @NotNull final BanSystemPlugin plugin;
+    private @NotNull final ConnectionFactory connectionFactory;
 
-    @NotNull
-    private final ConnectionFactory connectionFactory;
-
-    private Connection connection;
-    private Channel channel;
+    private @Nullable Connection connection;
+    private @Nullable Channel channel;
 
     public RabbitMQ(@NotNull BanSystemPlugin plugin) {
         this.plugin = plugin;
@@ -37,10 +32,7 @@ public class RabbitMQ {
             channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT, false, true, null);
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
-
-            channel.basicConsume(QUEUE_NAME, true, new UnbanMessageConsumer(this, plugin.getBanManager()), consumerTag -> {
-                System.out.println("Cancelled consumer: " + consumerTag);
-            });
+            channel.basicConsume(QUEUE_NAME, true, new UnbanMessageConsumer(plugin.getBanManager()), cancelCallback());
 
             System.out.println("RabbitMQ connected");
         } catch (Exception e) {
@@ -64,14 +56,9 @@ public class RabbitMQ {
         }
     }
 
-    public void publishMessage(@NotNull String routingKey, @Nullable AMQP.BasicProperties basicProperties, @NotNull String message) {
-        if (channel != null) {
-            try {
-                channel.basicPublish(EXCHANGE_NAME, routingKey, basicProperties, message.getBytes(StandardCharsets.UTF_8));
-                System.out.println("publish message: " + routingKey + " - " + message);
-            } catch (Exception e) {
-                System.err.println("Error publishing message: " + e.getMessage());
-            }
-        }
+    private CancelCallback cancelCallback() {
+        return consumerTag -> {
+            System.out.println("Cancelled consumer: " + consumerTag);
+        };
     }
 }

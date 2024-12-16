@@ -1,11 +1,11 @@
 package com.github.lukas2o11.bansystem.bungee;
 
-import com.github.lukas2o11.bansystem.bungee.database.MySQL;
-import com.github.lukas2o11.bansystem.bungee.ban.BanManager;
-import com.github.lukas2o11.bansystem.bungee.ban.DefaultBanManager;
-import com.github.lukas2o11.bansystem.bungee.messaging.RabbitMQ;
-import com.github.lukas2o11.bansystem.bungee.template.BanTemplateManager;
-import com.github.lukas2o11.bansystem.bungee.template.DefaultBanTemplateManager;
+import com.github.lukas2o11.bansystem.bungee.data.database.MySQL;
+import com.github.lukas2o11.bansystem.bungee.data.ban.BanManager;
+import com.github.lukas2o11.bansystem.bungee.data.ban.DefaultBanManager;
+import com.github.lukas2o11.bansystem.bungee.data.messaging.RabbitMQ;
+import com.github.lukas2o11.bansystem.bungee.data.template.BanTemplateManager;
+import com.github.lukas2o11.bansystem.bungee.data.template.DefaultBanTemplateManager;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 

@@ -1,4 +1,4 @@
-package com.github.lukas2o11.bansystem.bungee.ban.tasks;
+package com.github.lukas2o11.bansystem.bungee.data.ban.tasks;
 
 
 import java.util.concurrent.CompletableFuture;

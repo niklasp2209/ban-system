@@ -11,6 +11,5 @@ import org.jetbrains.annotations.NotNull;
 @EqualsAndHashCode
 public class UnbanRequest {
 
-    @NotNull
-    private Integer id;
+    private @NotNull Integer id;
 }

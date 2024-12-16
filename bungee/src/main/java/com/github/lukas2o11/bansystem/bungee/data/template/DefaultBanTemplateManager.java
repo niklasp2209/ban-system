@@ -1,7 +1,7 @@
-package com.github.lukas2o11.bansystem.bungee.template;
+package com.github.lukas2o11.bansystem.bungee.data.template;
 
 import com.github.lukas2o11.bansystem.bungee.BanSystemPlugin;
-import com.github.lukas2o11.bansystem.bungee.database.MySQL;
+import com.github.lukas2o11.bansystem.bungee.data.database.MySQL;
 
 public class DefaultBanTemplateManager implements BanTemplateManager {
 

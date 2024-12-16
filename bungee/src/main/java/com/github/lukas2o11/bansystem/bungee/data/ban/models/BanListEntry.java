@@ -1,4 +1,4 @@
-package com.github.lukas2o11.bansystem.bungee.ban.models;
+package com.github.lukas2o11.bansystem.bungee.data.ban.models;
 
 import org.jetbrains.annotations.NotNull;
 

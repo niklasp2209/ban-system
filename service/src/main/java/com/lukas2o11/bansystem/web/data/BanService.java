@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface BanService {
 
-    void unban(@NotNull Integer id);
+    void unbanUser(@NotNull Integer id);
 
     @NotNull Ban getBanById(@NotNull Integer id);
 

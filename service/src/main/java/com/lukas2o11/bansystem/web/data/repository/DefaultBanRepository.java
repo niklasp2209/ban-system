@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -35,15 +34,15 @@ public class DefaultBanRepository implements BanRepository {
     private static final String COUNT_QUERY = "SELECT COUNT(*) " +
             "FROM bansystem_bans";
 
-    private final JdbcTemplate jdbcTemplate;
+    private @NotNull final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public DefaultBanRepository(JdbcTemplate jdbcTemplate) {
+    public DefaultBanRepository(@NotNull JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Optional<Ban> findById(@NotNull @Param("id") Integer id) {
+    public Optional<Ban> findById(@NotNull Integer id) {
         return Optional.of(jdbcTemplate.query(FIND_BY_ID_QUERY, banFromRow(), id))
                 .flatMap(bans -> bans.isEmpty()
                         ? Optional.empty()
@@ -59,7 +58,7 @@ public class DefaultBanRepository implements BanRepository {
     }
 
     @Override
-    public Page<Ban> findAll(@NotNull Pageable pageable) {
+    public @NotNull Page<Ban> findAll(@NotNull Pageable pageable) {
         int limit = pageable.getPageSize();
         int offset = pageable.getPageNumber() * limit;
 

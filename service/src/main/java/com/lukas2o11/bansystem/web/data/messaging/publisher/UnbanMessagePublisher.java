@@ -1,22 +1,21 @@
 package com.lukas2o11.bansystem.web.data.messaging.publisher;
 
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
 @Service
+@Log4j2
 public class UnbanMessagePublisher implements RabbitMQMessagePublisher {
 
-    private final RabbitTemplate template;
+    private @NotNull final RabbitTemplate template;
 
     @Value("${rabbitmq.exchange_name}")
     private String exchangeName;
@@ -25,23 +24,24 @@ public class UnbanMessagePublisher implements RabbitMQMessagePublisher {
     private String unbanPlayerRoutingKey;
 
     @Autowired
-    public UnbanMessagePublisher(RabbitTemplate template) {
+    public UnbanMessagePublisher(@NotNull RabbitTemplate template) {
         this.template = template;
     }
 
     @Override
     public void sendMessage(@NotNull String message) {
         MessageProperties properties = new MessageProperties();
-        properties.setReplyTo("");  // Keine Antwort erwartet
-        Message rabbitMessage = new Message(message.getBytes(StandardCharsets.UTF_8), properties);
+        properties.setReplyTo("");
 
         try {
-            // Nachricht senden an den richtigen Routing Key
-            template.convertAndSend(exchangeName, unbanPlayerRoutingKey, rabbitMessage);
-            System.out.println("Nachricht gesendet: " + message);
+            template.convertAndSend(exchangeName, unbanPlayerRoutingKey, buildMessage(message, properties));
+            log.info("RabbitMQ message sent: {}", message);
         } catch (Exception e) {
-            System.err.println("Fehler beim Senden der Nachricht: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Could not send RabbitMQ message", e);
         }
+    }
+
+    private @NotNull Message buildMessage(@NotNull String message, MessageProperties properties) {
+        return new Message(message.getBytes(StandardCharsets.UTF_8), properties);
     }
 }

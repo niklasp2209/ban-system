@@ -9,5 +9,4 @@ public class BanSystemServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(BanSystemServiceApplication.class, args);
     }
-
 }

@@ -1,9 +1,9 @@
-package com.github.lukas2o11.bansystem.bungee.ban;
+package com.github.lukas2o11.bansystem.bungee.data.ban;
 
 import com.github.lukas2o11.bansystem.api.Ban;
 import com.github.lukas2o11.bansystem.api.BanType;
-import com.github.lukas2o11.bansystem.bungee.ban.models.BanList;
-import com.github.lukas2o11.bansystem.bungee.ban.models.BanListEntry;
+import com.github.lukas2o11.bansystem.bungee.data.ban.models.BanList;
+import com.github.lukas2o11.bansystem.bungee.data.ban.models.BanListEntry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
