@@ -6,7 +6,5 @@ export interface BanListEntry {
     bannedAt: number,
     expiresAt: number,
     active: boolean,
-    type: string,
-    reason: string,
-    duration: number,
+    reason: string
 }

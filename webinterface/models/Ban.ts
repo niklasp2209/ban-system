@@ -6,5 +6,4 @@ export interface Ban {
     bannedAt: number,
     expiresAt: number,
     active: boolean,
-    type: string,
 }
