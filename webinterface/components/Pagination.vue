@@ -39,11 +39,11 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['change']);
-const DISPLAYED_PAGES = 5;
+const DISPLAYED_PAGES: number = 5;
 
 const displayedPages: ComputedRef<number[]> = computed<number[]>(() => {
-    let startPage = Math.max(props.currentPage - 2, 0);
-    let endPage = Math.min(startPage + DISPLAYED_PAGES - 1, props.totalPages - 1);
+    let startPage: number = Math.max(props.currentPage - 2, 0);
+    let endPage: number = Math.min(startPage + DISPLAYED_PAGES - 1, props.totalPages - 1);
 
     if (endPage - startPage < DISPLAYED_PAGES - 1) {
         startPage = Math.max(endPage - DISPLAYED_PAGES + 1, 0);
