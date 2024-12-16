@@ -1,6 +1,8 @@
-package com.lukas2o11.bansystem.web.ban.repository;
+package com.lukas2o11.bansystem.web.data.repository;
 
 import com.github.lukas2o11.bansystem.api.Ban;
+import com.lukas2o11.bansystem.web.data.models.BanListEntry;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +23,11 @@ public class DefaultBanRepository implements BanRepository {
             "FROM bansystem_bans " +
             "WHERE id = ?";
 
+    private static final String FIND_BY_ID_AS_ENTRY_QUERY = "SELECT bb.*, bt.id, bt.reason, bt.type " +
+            "FROM bansystem_bans bb " +
+            "INNER JOIN bansystem_templates bt ON bt.id = bb.templateId " +
+            "WHERE bb.id = ?;";
+
     private static final String FIND_ALL_QUERY = "SELECT * " +
             "FROM bansystem_bans " +
             "LIMIT ? OFFSET ?";
@@ -36,7 +43,7 @@ public class DefaultBanRepository implements BanRepository {
     }
 
     @Override
-    public Optional<Ban> findById(@Param("id") Integer id) {
+    public Optional<Ban> findById(@NotNull @Param("id") Integer id) {
         return Optional.of(jdbcTemplate.query(FIND_BY_ID_QUERY, banFromRow(), id))
                 .flatMap(bans -> bans.isEmpty()
                         ? Optional.empty()
@@ -44,7 +51,15 @@ public class DefaultBanRepository implements BanRepository {
     }
 
     @Override
-    public Page<Ban> findAll(Pageable pageable) {
+    public Optional<BanListEntry> findByIdAsListEntry(@NotNull Integer id) {
+        return Optional.of(jdbcTemplate.query(FIND_BY_ID_AS_ENTRY_QUERY, listEntryFromRow(), id))
+                .flatMap(bans -> bans.isEmpty()
+                        ? Optional.empty()
+                        : Optional.ofNullable(bans.getFirst()));
+    }
+
+    @Override
+    public Page<Ban> findAll(@NotNull Pageable pageable) {
         int limit = pageable.getPageSize();
         int offset = pageable.getPageNumber() * limit;
 
@@ -63,6 +78,19 @@ public class DefaultBanRepository implements BanRepository {
                 rs.getLong("bannedAt"),
                 rs.getLong("expiresAt"),
                 rs.getBoolean("active")
+        );
+    }
+
+    private RowMapper<BanListEntry> listEntryFromRow() {
+        return (rs, rowNum) -> new BanListEntry(
+                rs.getInt("id"),
+                UUID.fromString(rs.getString("player")),
+                rs.getString("templateId"),
+                rs.getString("bannedBy"),
+                rs.getLong("bannedAt"),
+                rs.getLong("expiresAt"),
+                rs.getBoolean("active"),
+                rs.getString("reason")
         );
     }
 }

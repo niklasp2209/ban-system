@@ -13,7 +13,9 @@ import java.util.function.Function;
 
 public class MySQL {
 
+    @NotNull
     private final HikariConfig config;
+
     private Optional<HikariDataSource> dataSource = Optional.empty();
 
     public MySQL() {

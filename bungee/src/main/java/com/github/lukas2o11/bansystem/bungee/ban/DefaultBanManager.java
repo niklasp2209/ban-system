@@ -32,33 +32,35 @@ public class DefaultBanManager implements BanManager {
             "AND bt.type = ? " +
             "LIMIT 1;";
 
-    private static final String GET_BAN_QUERY = "SELECT bb.player, bb.templateId, bb.bannedBy, bb.bannedAt, bb.expiresAt, bt.type" +
+    private static final String GET_BAN_BY_ID_QUERY = "SELECT *" +
+            "FROM bansystem_bans " +
+            "WHERE id = ?;";
+
+    private static final String GET_BAN_QUERY = "SELECT bb.*, bt.type" +
             "FROM bansystem_bans bb " +
             "INNER JOIN bansystem_templates bt ON bt.id = bb.templateId " +
             "WHERE player = ? " +
             "AND bb.active = true " +
             "AND bt.type = ?;";
 
-    private static final String GET_BANS_QUERY = "SELECT bb.player, bb.templateId, bb.bannedBy, bb.bannedAt, bb.expiresAt, bt.type" +
+    private static final String GET_BANS_QUERY = "SELECT bb.*, bt.type" +
             "FROM bansystem_bans bb " +
             "INNER JOIN bansystem_templates bt ON bt.id = bb.templateId " +
             "WHERE player = ? " +
             "AND bt.type = ?;";
 
-    private static final String GET_BAN_ENTRY_QUERY = "SELECT bb.player, bb.bannedBy, bb.bannedAt, bb.expiresAt, " +
-            "bt.id, bt.reason, bt.duration, bt.type " +
+    private static final String GET_BAN_ENTRY_QUERY = "SELECT bb.*, bt.reason, bt.duration, bt.type " +
             "FROM bansystem_bans bb " +
             "INNER JOIN bansystem_templates bt ON bt.id = bb.templateId " +
             "WHERE bb.player = ? " +
             "AND bb.active = true " +
             "AND bt.type = ?;";
 
-    private static final String GET_BAN_ENTRIES_QUERY = "SELECT bb.player, bb.bannedBy, bb.bannedAt, bb.expiresAt, " +
-            "bt.id, bt.reason, bt.duration, bt.type " +
+    private static final String GET_BAN_ENTRIES_QUERY = "SELECT bb.*, bt.reason, bt.duration, bt.type " +
             "FROM bansystem_bans bb " +
             "INNER JOIN bansystem_templates bt ON bt.id = bb.templateId" +
             "WHERE bb.player = ? " +
-            "AND bt.type = ?";
+            "AND bt.type = ?;";
 
     private final MySQL mySQL;
 
@@ -107,8 +109,31 @@ public class DefaultBanManager implements BanManager {
     }
 
     @Override
+    public @NotNull CompletableFuture<Void> unbanUser(int banId, @NotNull String unbannedBy) {
+        return getBanById(banId).thenCompose(optionalBan -> optionalBan
+                .map(ban -> unbanUser(ban.getPlayer(), banId, unbannedBy))
+                .orElseGet(() -> CompletableFuture.failedFuture(new Exception())));
+    }
+
+    @Override
     public @NotNull CompletableFuture<Boolean> isUserBanned(@NotNull UUID player, @NotNull BanType type) {
         return mySQL.query(IS_BANNED_QUERY, player.toString(), type.toString()).thenApply(result -> result.rows().size() == 1);
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Optional<Ban>> getBanById(int banId) {
+        return mySQL.query(GET_BAN_BY_ID_QUERY, banId).thenApply(result -> {
+            if (result.rows().isEmpty()) {
+                return Optional.empty();
+            }
+
+            if (result.rows().size() > 1) {
+                System.out.println("More than 1 active ban found for id '" + banId + "'");
+                return Optional.empty();
+            }
+
+            return Optional.of(banFromRow(result.rows().getFirst()));
+        });
     }
 
     @Override
