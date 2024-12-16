@@ -6,5 +6,5 @@ export default defineEventHandler(async (event) => {
         throw createError({ status: 400, message: 'id is missing or invalid'});
     }
     
-    return await $fetch<Ban>(`${useRuntimeConfig(event)?.public?.api?.url}/api/v1/bans/${id}`);
+    return await $fetch<Ban>(`${useRuntimeConfig(event)?.public?.api?.url}/api/v1/bans/${id}/entry`);
 });
