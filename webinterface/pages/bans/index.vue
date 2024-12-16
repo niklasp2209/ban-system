@@ -1,13 +1,13 @@
 <template>
     <div class="flex flex-col gap-4">
-        <div v-if="test" class="">
-            <BanEntry :id="test?.id" />
+        <div v-if="selectedBan">
+            <BanEntry 
+                :id="selectedBan" 
+                @unban="unban"
+                @close="unselectBan"
+            />
         </div>
-        
-        <table 
-            v-if="bans?.content?.length > 0"
-            class="min-w-full table-auto bg-white rounded-lg shadow-lg overflow-hidden"
-        >
+        <table class="min-w-full table-auto bg-white rounded-lg shadow-lg overflow-hidden">
             <thead>
                 <tr class="bg-gray-800 text-white">
                     <th class="px-6 py-3 text-left">Spieler</th>
@@ -17,7 +17,7 @@
                     <th class="px-6 py-3 text-left">Aktion</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="bans?.content?.length > 0">
                 <tr 
                     v-for="ban in bans?.content"
                     :key="ban?.id"
@@ -35,11 +35,11 @@
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-700">{{ ban?.templateId }}</td>
                     <td class="px-6 py-4 text-sm text-gray-700">{{ formatDate(ban?.expiresAt) }}</td>
-                    <td class="px-6 py-4 text-sm text-red-600 font-semibold">BAN</td>
+                    <td class="px-6 py-4 text-sm text-red-600 font-semibold"> {{ type }}</td>
                     <td class="px-6 py-4 text-sm">
                         <div 
                             class="cursor-pointer p-2 hover:bg-gray-200 rounded-full"
-                            @click="test = ban;"
+                            @click="selectBan(ban)"
                             title="Mehr Informationen"
                         >
                             <svg 
@@ -57,7 +57,19 @@
                     </td>
                 </tr>
             </tbody>
+            <tbody v-else>
+                <tr>
+                    <td class="text-xl p-4 font-semibold">Es wurden keine Banns gefunden!</td>
+                </tr>
+            </tbody>
         </table>
+    </div>
+    <div class="pt-4">
+        <Pagination 
+            :currentPage="currentPage" 
+            :totalPages="10"
+            @change="goToPage"
+        />
     </div>
 </template>
 
@@ -65,12 +77,53 @@
 import type { PaginatedResponse } from '~/models/PaginatedResponse';
 import type { Ban } from '../../models/Ban';
 
-const test: Ref<Ban | undefined> = ref<Ban | undefined>(undefined);
+const type: Ref<string | undefined> = ref<string | undefined>(useRoute()?.query?.type as string | undefined);
+if (!type.value) {
+    type.value = 'BAN';
+}
 
-const { data: bans } : { data: Ref<PaginatedResponse<Ban>> } = await useFetch('/api/bans', {
-    query: { 
-        page: 0,
-        pageSize: 25
+const PAGE_SIZE: number = 25;
+const currentPage: Ref<number> = ref(0);
+
+const bans: Ref<PaginatedResponse<Ban> | undefined> = ref<PaginatedResponse<Ban> | undefined>(undefined);
+const selectedBan: Ref<number | undefined> = ref<number | undefined>(undefined);
+
+const fetchBans = async (): Promise<void> => {
+    const { data } : { data: Ref<PaginatedResponse<Ban>> } = await useFetch('/api/bans', {
+        query: { 
+            page: currentPage.value,
+            pageSize: PAGE_SIZE,
+            type: type.value
+        }
+    });
+    bans.value = data.value;
+}
+await fetchBans();
+
+const goToPage = (page: number): void => {
+    currentPage.value = page;
+}
+
+watch(
+    () => currentPage.value,
+    async () => await fetchBans()
+);
+
+const selectBan = (ban: Ban): void => {
+    if (selectedBan.value === ban?.id) {
+        selectedBan.value = undefined;
     }
-});
+
+    selectedBan.value = ban?.id;
+}
+
+const unselectBan = (): void => {
+    selectedBan.value = undefined;
+}
+
+const unban = (id: number): void => {
+    if (bans.value) {
+        bans.value.content = bans.value?.content?.filter(ban => ban?.id !== id);
+    }
+}
 </script>
