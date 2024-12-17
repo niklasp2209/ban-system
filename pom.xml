@@ -11,6 +11,7 @@
     <modules>
         <module>bungee</module>
         <module>api</module>
+        <module>service</module>
     </modules>
 
     <properties>
@@ -55,18 +56,6 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Main-Class>com.github.lukas2o11.bansystem.bungee.BanSystemPlugin</Main-Class>
-                        </manifestEntries>
-                    </archive>
                 </configuration>
             </plugin>
         </plugins>
