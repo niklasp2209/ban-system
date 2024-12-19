@@ -55,7 +55,7 @@ public record Unban(@NotNull UUID player, @NotNull Integer banId, @NotNull Strin
 ```
 
 ### Beziehungen der Entitäten
-![relations](data_relations.jpg)
+![relations](data_relations.png)
 
 BanTemplate (1) <--- (N) Ban (1) <--> (1) Unban
 
